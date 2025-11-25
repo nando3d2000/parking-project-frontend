@@ -203,7 +203,7 @@ const Login = () => {
                 
                 <button
                   type="button"
-                  onClick={() => handleTestLogin('maria.rodriguez@email.com', 'password123')}
+                  onClick={() => handleTestLogin('maria.rodriguez@email.com', 'maria123')}
                   disabled={isLoading}
                   className="w-full text-left bg-gradient-to-r from-green-100 to-green-50 text-green-800 px-4 py-3 rounded-lg hover:from-green-200 hover:to-green-100 transition-all duration-200 border border-green-200 disabled:opacity-50"
                 >
