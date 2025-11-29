@@ -18,7 +18,6 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Limpiar error cuando el usuario empiece a escribir
     if (error) setError('');
   };
 
@@ -56,7 +55,6 @@ const Register = () => {
       const response = await register(registerData);
       
       if (response.success) {
-        // Redirigir al dashboard principal
         window.location.href = '/dashboard';
       } else {
         setError(response.message || 'Error al registrar usuario');
@@ -68,7 +66,6 @@ const Register = () => {
     }
   };
 
-  // Logo SVG de IUSH (mismo que en Login)
   const IUSHLogo = () => (
     <div className="mx-auto w-20 h-20 mb-6">
       <svg viewBox="0 0 120 120" className="w-full h-full">
@@ -294,7 +291,6 @@ const Register = () => {
           </form>
         </div>
         
-        {/* Footer */}
         <div className="text-center text-xs text-gray-500 mt-8">
           <p>© 2024 IUSH - Sistema de Gestión de Parqueaderos</p>
         </div>

@@ -14,11 +14,9 @@ function App() {
         <Router>
           <div className="App">
             <Routes>
-              {/* Rutas públicas */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               
-              {/* Rutas protegidas */}
               <Route 
                 path="/dashboard" 
                 element={
@@ -28,10 +26,8 @@ function App() {
                 } 
               />
               
-              {/* Redirigir la ruta raíz al login */}
               <Route path="/" element={<Navigate to="/login" replace />} />
               
-              {/* Redirigir cualquier otra ruta al login */}
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
           </div>

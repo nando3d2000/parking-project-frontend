@@ -18,26 +18,10 @@ const AdminParkingLots = () => {
   // Solicitar estado inicial cuando se conecte el WebSocket
   useEffect(() => {
     if (isConnected) {
-      console.log('🌐 WebSocket conectado, solicitando estado inicial...');
       requestParkingStatus();
     }
   }, [isConnected, requestParkingStatus]);
 
-  // Debug: Log de datos en tiempo real
-  useEffect(() => {
-    console.log('🟦 Admin - Datos RT recibidos:', realtimeSpots.length, 'spots');
-    realtimeSpots.forEach((spot, index) => {
-      console.log(`  - Spot ${index} (${spot.code}) en Lot ${spot.parkingLotId}: ${spot.status}`);
-    });
-    console.log('🔍 Total spots por parking lot:');
-    const lotCounts = {};
-    realtimeSpots.forEach(spot => {
-      lotCounts[spot.parkingLotId] = (lotCounts[spot.parkingLotId] || 0) + 1;
-    });
-    console.log(lotCounts);
-  }, [realtimeSpots]);
-
-  // Cargar parking lots
   useEffect(() => {
     loadParkingLots();
   }, []);
@@ -45,18 +29,13 @@ const AdminParkingLots = () => {
   const loadParkingLots = async () => {
     try {
       setLoading(true);
-      console.log('Cargando parking lots...'); // Debug
       const response = await authService.authenticatedRequest('/parking-lots');
-      console.log('Response status:', response.status); // Debug
-      console.log('Response ok:', response.ok); // Debug
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Parking lots data:', data); // Debug
         setParkingLots(data.data?.parkingLots || []);
       } else {
         const errorData = await response.json();
-        console.error('Error response:', errorData); // Debug
         throw new Error(errorData.message || 'Error al cargar parking lots');
       }
     } catch (error) {
@@ -70,7 +49,6 @@ const AdminParkingLots = () => {
   const handleManageLot = (lot) => {
     setSelectedParkingLot(lot);
     setShowSpotManager(true);
-    console.log('Gestionar parking lot:', lot);
   };
 
   const handleManageSpots = (parkingLot) => {
@@ -84,28 +62,17 @@ const AdminParkingLots = () => {
   };
 
   const handleSpotManagerUpdate = () => {
-    // Recargar los datos de parking lots para actualizar estadísticas
     loadParkingLots();
   };
 
-  // Calcular estadísticas en tiempo real para cada parking lot
   const calculateRealTimeStats = useMemo(() => {
     const getStatsForLot = (lotId, originalStats) => {
-      // Obtener spots en tiempo real para este parking lot
       const rtSpots = realtimeSpots.filter(spot => spot.parkingLotId === lotId);
       
-      console.log(`🔍 Admin Debug - lotId: ${lotId}, rtSpots encontrados: ${rtSpots.length}`);
-      rtSpots.forEach(spot => {
-        console.log(`  - ${spot.code}: ${spot.status}`);
-      });
-      
       if (rtSpots.length === 0) {
-        // Si no hay datos en tiempo real, usar las estadísticas originales
-        console.log(`⚠️ Admin - No hay datos RT para lot ${lotId}, usando originales:`, originalStats);
         return originalStats;
       }
 
-      // Normalizar estados para el conteo
       const normalizeStatus = (status) => {
         const statusMap = {
           'LIBRE': 'available',
@@ -120,7 +87,6 @@ const AdminParkingLots = () => {
         return statusMap[status] || status;
       };
 
-      // Contar estados
       let available = 0, occupied = 0, reserved = 0, maintenance = 0;
       
       rtSpots.forEach(spot => {
@@ -141,7 +107,6 @@ const AdminParkingLots = () => {
         maintenance
       };
 
-      console.log(`📊 Admin - Estadísticas RT para lot ${lotId}:`, realtimeStats);
       return realtimeStats;
     };
 
@@ -177,7 +142,6 @@ const AdminParkingLots = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -199,7 +163,6 @@ const AdminParkingLots = () => {
         </button>
       </div>
 
-      {/* Grid de Parking Lots */}
       {parkingLots.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl shadow-lg">
           <div className="text-gray-400 text-6xl mb-4">🏢</div>
@@ -219,7 +182,6 @@ const AdminParkingLots = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {parkingLots.map((lot) => {
-            // Calcular estadísticas en tiempo real o usar las originales
             const stats = calculateRealTimeStats(lot.id, lot.statistics);
             
             return (
@@ -227,7 +189,6 @@ const AdminParkingLots = () => {
               key={lot.id}
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100"
             >
-              {/* Header de la tarjeta */}
               <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -245,13 +206,11 @@ const AdminParkingLots = () => {
                 </div>
               </div>
 
-              {/* Contenido de la tarjeta */}
               <div className="p-6">
                 <p className="text-gray-600 mb-4 line-clamp-2">
                   {lot.description || 'Sin descripción disponible'}
                 </p>
 
-                {/* Estadísticas */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-green-50 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold text-green-600">
@@ -267,7 +226,6 @@ const AdminParkingLots = () => {
                   </div>
                 </div>
 
-                {/* Estado del parqueadero */}
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm text-gray-500">Estado:</span>
                   <span className={`px-3 py-1 rounded-full text-xs font-medium ${
@@ -279,7 +237,6 @@ const AdminParkingLots = () => {
                   </span>
                 </div>
 
-                {/* Botones de acción */}
                 <div className="space-y-2">
                   <button
                     onClick={() => handleManageLot(lot)}
@@ -294,7 +251,6 @@ const AdminParkingLots = () => {
                 </div>
               </div>
 
-              {/* Indicador de fecha de creación */}
               <div className="bg-gray-50 px-6 py-3 text-xs text-gray-500">
                 Parqueadero existente desde: {new Date(lot.createdAt).toLocaleDateString('es-ES', {
                   year: 'numeric',
@@ -308,7 +264,6 @@ const AdminParkingLots = () => {
         </div>
       )}
 
-      {/* Modal para crear nuevo parqueadero - Placeholder */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
@@ -336,7 +291,6 @@ const AdminParkingLots = () => {
         </div>
       )}
       
-      {/* Parking Spot Manager Modal */}
       {showSpotManager && selectedParkingLot && (
         <ParkingSpotManager
           parkingLot={selectedParkingLot}

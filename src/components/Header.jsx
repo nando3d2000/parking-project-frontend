@@ -14,7 +14,6 @@ const Header = ({ logoPath }) => {
     <header className="bg-gradient-to-r from-[#00386D] to-[#003d75] shadow-xl border-b-4 border-[#780D80]">
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo y título */}
           <div className="flex items-center gap-6">
             <img 
               src={logoPath} 
@@ -31,15 +30,12 @@ const Header = ({ logoPath }) => {
             </div>
           </div>
 
-          {/* Información del usuario */}
           <div className="flex items-center gap-4">
-            {/* Indicador de tiempo real */}
             <div className="hidden md:flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm">
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
               <span className="text-white text-sm font-semibold">En línea</span>
             </div>
 
-            {/* Información del usuario */}
             {user && (
               <div className="flex items-center gap-3">
                 <div className="text-right text-white">
@@ -49,14 +45,12 @@ const Header = ({ logoPath }) => {
                   </p>
                 </div>
                 
-                {/* Avatar */}
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                   <span className="text-white font-bold text-lg">
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                 </div>
 
-                {/* Menú de usuario */}
                 <div className="relative">
                   <button
                     onClick={handleLogout}

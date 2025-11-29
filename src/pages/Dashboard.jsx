@@ -16,16 +16,13 @@ import { useParkingSpots } from "../hooks/useParkingSpots";
 function Dashboard() {
   const { user } = useAuth();
   
-  // Determinar si es administrador
   const isAdmin = user && user.role === 'admin';
   
-  // Estados para usuarios normales
   const [selectedParkingLot, setSelectedParkingLot] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [floorFilter, setFloorFilter] = useState("all");
   const [viewMode, setViewMode] = useState("grid");
   
-  // Siempre llamar el hook, pero pasando null cuando no se necesite
   const shouldLoadSpots = !isAdmin && selectedParkingLot;
   const { 
     parkingSpots: parkingCells = [], 
@@ -45,11 +42,9 @@ function Dashboard() {
   }, [parkingCells, statusFilter, floorFilter]);
 
   const handleClick = async (cell) => {
-    // Ejemplo de cómo cambiar el estado de un parking spot
     const currentStatus = cell.status;
     let newStatus;
     
-    // Ciclo simple entre estados para demostración
     switch (currentStatus) {
       case "available":
         newStatus = "occupied";
@@ -75,7 +70,6 @@ function Dashboard() {
     }
   };
 
-  // Mostrar estado de carga solo para usuarios normales cuando están viendo spots
   if (!isAdmin && selectedParkingLot && loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
@@ -92,7 +86,6 @@ function Dashboard() {
     );
   }
 
-  // Mostrar error solo para usuarios normales cuando están viendo spots
   if (!isAdmin && selectedParkingLot && error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-blue-100">
@@ -132,15 +125,11 @@ function Dashboard() {
 
       <div className="w-full max-w-7xl mx-auto py-8 px-4">
         {isAdmin ? (
-          // Vista de Administrador
           <AdminParkingLots />
         ) : !selectedParkingLot ? (
-          // Vista de selección de parqueaderos para usuarios
           <UserParkingLots onSelectParkingLot={setSelectedParkingLot} />
         ) : (
-          // Vista de espacios de estacionamiento para usuarios
           <>
-            {/* Header con información del parqueadero seleccionado */}
             <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -171,7 +160,6 @@ function Dashboard() {
 
             <ParkingLegend className="mb-6" />
 
-            {/* Selector de vista */}
             <div className="bg-white rounded-2xl shadow-lg p-4 mb-6 flex items-center justify-center gap-4">
               <span className="text-gray-700 font-semibold">Vista:</span>
               <div className="flex gap-2">

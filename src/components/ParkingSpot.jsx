@@ -4,15 +4,13 @@ import {FaCar, FaTools, FaClock, FaCheck, FaParking, FaWifi} from "react-icons/f
 const ParkingSpot = ({ cell, onClick }) => {
   if (!cell) return null;
 
-  // Verificar si hay actualización en tiempo real
   const isRealtimeUpdated = cell.isRealTimeUpdated;
-  const hasWifi = cell.sensorData; // Si tiene datos del sensor IoT
+  const hasWifi = cell.sensorData;
 
   const base =
     "relative flex flex-col items-center justify-center rounded-2xl w-28 h-28 text-center font-semibold text-xs cursor-pointer transition-all duration-500 transform hover:scale-[1.08] hover:-translate-y-1 shadow-[0_4px_10px_rgba(0,0,0,0.15)] border border-transparent overflow-hidden";
 
   const getStyles = (status) => {
-    // Normalizar el estado (manejar tanto inglés como español)
     const normalizedStatus = status.toLowerCase();
     const statusMap = {
       'available': 'available',
@@ -70,20 +68,16 @@ const ParkingSpot = ({ cell, onClick }) => {
       className={`${style.container} ${isRealtimeUpdated ? 'ring-2 ring-green-400 ring-opacity-50' : ''} hover:${style.glow} group`}
       title={`Celda ${cell.code} - Piso ${cell.floor}${isRealtimeUpdated ? ' (Actualizado en tiempo real)' : ''}`}
     >
-      {/* Animación de actualización en tiempo real */}
       {isRealtimeUpdated && (
         <div className="absolute inset-0 bg-green-400/20 rounded-2xl animate-ping opacity-75"></div>
       )}
 
-      {/* Capa de luz animada */}
       <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-500" />
 
-      {/* Badge del piso */}
       <div className="absolute top-2 left-2 bg-white/20 text-white text-[10px] px-2 py-[2px] rounded-full font-bold backdrop-blur-sm shadow-md">
         Piso {cell.floor}
       </div>
 
-      {/* Indicador de conexión IoT en tiempo real */}
       {isRealtimeUpdated && (
         <div className="absolute top-2 right-2 flex items-center gap-1">
           {hasWifi && (
@@ -93,18 +87,14 @@ const ParkingSpot = ({ cell, onClick }) => {
         </div>
       )}
 
-      {/* Icono principal */}
       <div className="z-10">{style.icon}</div>
 
-      {/* Código de celda */}
       <div className="z-10 text-sm font-bold bg-white/10 px-3 py-1 rounded-xl backdrop-blur-sm border border-white/20">
         {cell.code}
       </div>
 
-      {/* Estado */}
       <div className="z-10 text-[10px] opacity-90 mt-1">{style.text}</div>
 
-      {/* Indicador inferior tipo LED */}
       <div
         className={`absolute bottom-2 w-2.5 h-2.5 rounded-full ${
           cell.status === "available"
@@ -117,7 +107,6 @@ const ParkingSpot = ({ cell, onClick }) => {
         }`}
       ></div>
 
-      {/* Sombra reflejo */}
       <div className="absolute bottom-0 w-full h-[6px] bg-black/20 rounded-b-2xl blur-sm" />
     </div>
   );

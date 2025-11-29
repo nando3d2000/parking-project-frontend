@@ -7,18 +7,14 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Datos en tiempo real del WebSocket
   const { realtimeSpots, requestParkingStatus, isConnected } = useRealTimeParking();
 
-  // Solicitar estado inicial cuando se conecte el WebSocket
   useEffect(() => {
     if (isConnected) {
-      console.log('🌐 User - WebSocket conectado, solicitando estado inicial...');
       requestParkingStatus();
     }
   }, [isConnected, requestParkingStatus]);
 
-  // Cargar parking lots
   useEffect(() => {
     loadParkingLots();
   }, []);
@@ -30,7 +26,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
       
       if (response.ok) {
         const data = await response.json();
-        // Filtrar solo parqueaderos activos
         const activeLots = data.data?.parkingLots?.filter(lot => lot.isActive) || [];
         setParkingLots(activeLots);
       } else {
@@ -39,24 +34,19 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
       }
     } catch (error) {
       setError(error.message);
-      console.error('Error cargando parqueaderos:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Calcular estadísticas en tiempo real para cada parking lot
   const calculateRealTimeStats = useMemo(() => {
     const getStatsForLot = (lotId, originalStats) => {
-      // Obtener spots en tiempo real para este parking lot
       const rtSpots = realtimeSpots.filter(spot => spot.parkingLotId === lotId);
       
       if (rtSpots.length === 0) {
-        // Si no hay datos en tiempo real, usar las estadísticas originales
         return originalStats;
       }
 
-      // Normalizar estados para el conteo
       const normalizeStatus = (status) => {
         const statusMap = {
           'LIBRE': 'available',
@@ -71,7 +61,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
         return statusMap[status] || status;
       };
 
-      // Contar estados
       let available = 0, occupied = 0, reserved = 0, maintenance = 0;
       
       rtSpots.forEach(spot => {
@@ -92,7 +81,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
         maintenance
       };
 
-      console.log(`📊 Estadísticas RT para lot ${lotId}:`, realtimeStats);
       return realtimeStats;
     };
 
@@ -142,7 +130,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Parqueaderos Disponibles
@@ -152,10 +139,8 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
         </p>
       </div>
 
-      {/* Grid de Parqueaderos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {parkingLots.map((lot) => {
-          // Calcular estadísticas en tiempo real o usar las originales
           const stats = calculateRealTimeStats(lot.id, lot.statistics);
           
           const occupancyPercentage = stats?.total > 0 
@@ -168,7 +153,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
               className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 cursor-pointer transform hover:scale-105"
               onClick={() => onSelectParkingLot(lot)}
             >
-              {/* Header de la tarjeta */}
               <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
                 <div className="flex items-center justify-between">
                   <div>
@@ -186,13 +170,11 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
                 </div>
               </div>
 
-              {/* Contenido de la tarjeta */}
               <div className="p-6">
                 <p className="text-gray-600 mb-4 line-clamp-2">
                   {lot.description || 'Parqueadero disponible para uso general'}
                 </p>
 
-                {/* Disponibilidad */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">Ocupación</span>
@@ -212,7 +194,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
                   </div>
                 </div>
 
-                {/* Estadísticas */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="bg-green-50 rounded-lg p-3 text-center">
                     <div className="text-2xl font-bold text-green-600">
@@ -228,7 +209,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
                   </div>
                 </div>
 
-                {/* Indicador de disponibilidad */}
                 <div className="flex items-center justify-center">
                   <span className={`px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 ${
                     (stats?.available || 0) > 0 
@@ -248,7 +228,6 @@ const UserParkingLots = ({ onSelectParkingLot }) => {
                 </div>
               </div>
 
-              {/* Footer con fecha */}
               <div className="bg-gray-50 px-6 py-3 text-xs text-gray-500">
                 Parqueadero existente desde: {new Date(lot.createdAt).toLocaleDateString('es-ES', {
                   year: 'numeric',

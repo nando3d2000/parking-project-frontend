@@ -2,8 +2,6 @@ import PropTypes from "prop-types";
 import { FaCheck, FaCar, FaClock, FaTools } from "react-icons/fa";
 
 const ParkingStats = ({ stats }) => {
-  console.log('🎯 ParkingStats renderizando con:', stats);
-
   const statCards = [
     {
       label: "Disponibles",
@@ -48,7 +46,6 @@ const ParkingStats = ({ stats }) => {
 
   return (
     <div className="w-full mb-8">
-      {/* Indicador de disponibilidad general */}
       <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -63,7 +60,6 @@ const ParkingStats = ({ stats }) => {
           </div>
         </div>
         
-        {/* Barra de progreso */}
         <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
           <div
             className="bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-500 flex items-center justify-end pr-2"
@@ -76,7 +72,6 @@ const ParkingStats = ({ stats }) => {
         </div>
       </div>
 
-      {/* Grid de estadísticas */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statCards.map((card, index) => (
           <div
@@ -84,24 +79,20 @@ const ParkingStats = ({ stats }) => {
             className={`${card.bgLight} ${card.borderColor} border-2 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer`}
           >
             <div className="flex flex-col items-center text-center">
-              {/* Icono con gradiente */}
               <div
                 className={`bg-gradient-to-br ${card.gradient} text-white p-4 rounded-full mb-4 shadow-lg`}
               >
                 {card.icon}
               </div>
               
-              {/* Número */}
               <div className={`text-4xl font-bold ${card.textColor} mb-2`}>
                 {card.value}
               </div>
               
-              {/* Etiqueta */}
               <div className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
                 {card.label}
               </div>
               
-              {/* Porcentaje */}
               <div className="text-xs text-gray-500 mt-2">
                 {total > 0 ? ((card.value / total) * 100).toFixed(1) : 0}%
               </div>

@@ -59,11 +59,9 @@ const Login = () => {
     }
   };
 
-  // Logo SVG de IUSH
   const IUSHLogo = () => (
     <div className="mx-auto w-32 h-32 mb-8">
       <svg viewBox="0 0 120 120" className="w-full h-full">
-        {/* Círculo exterior */}
         <circle 
           cx="60" 
           cy="60" 
@@ -73,7 +71,6 @@ const Login = () => {
           strokeWidth="2"
         />
         
-        {/* Libro abierto */}
         <path 
           d="M30 40 L60 35 L90 40 L90 75 L60 70 L30 75 Z" 
           fill="white" 
@@ -81,7 +78,6 @@ const Login = () => {
           strokeWidth="1.5"
         />
         
-        {/* Páginas del libro */}
         <line x1="60" y1="35" x2="60" y2="70" stroke="#1e40af" strokeWidth="1"/>
         <line x1="35" y1="45" x2="55" y2="43" stroke="#3b82f6" strokeWidth="0.8"/>
         <line x1="35" y1="50" x2="55" y2="48" stroke="#3b82f6" strokeWidth="0.8"/>
@@ -90,11 +86,9 @@ const Login = () => {
         <line x1="65" y1="48" x2="85" y2="50" stroke="#3b82f6" strokeWidth="0.8"/>
         <line x1="65" y1="53" x2="85" y2="55" stroke="#3b82f6" strokeWidth="0.8"/>
         
-        {/* Texto IUSH */}
         <text x="60" y="90" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold" fontFamily="Arial">IUSH</text>
         <text x="60" y="105" textAnchor="middle" fill="#e0e7ff" fontSize="8" fontFamily="Arial">Universidad</text>
         
-        {/* Gradiente */}
         <defs>
           <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#3b82f6"/>
@@ -108,9 +102,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex">
-      {/* Panel izquierdo - Información de la universidad */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 relative overflow-hidden">
-        {/* Formas decorativas de fondo */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
           <div className="absolute top-0 right-0 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
@@ -150,17 +142,14 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Panel derecho - Formulario de login */}
       <div className="flex-1 flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
-          {/* Logo móvil */}
           <div className="lg:hidden text-center">
             <div className="mx-auto w-20 h-20 mb-4">
               <IUSHLogo />
             </div>
           </div>
           
-          {/* Header */}
           <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               ¡Bienvenido de vuelta!
@@ -170,7 +159,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Botón para mostrar cuentas de prueba */}
           <div className="text-center">
             <button
               type="button"
@@ -181,7 +169,6 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Cuentas de prueba colapsables */}
           {showTestAccounts && (
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 shadow-sm">
               <p className="text-sm font-semibold text-blue-800 mb-3 text-center">🧪 Cuentas Demo</p>
@@ -219,7 +206,6 @@ const Login = () => {
             </div>
           )}
 
-          {/* Formulario */}
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
             <form className="space-y-6" onSubmit={handleSubmit}>
               {error && (
@@ -319,7 +305,6 @@ const Login = () => {
             </form>
           </div>
           
-          {/* Footer */}
           <div className="text-center text-xs text-gray-500 mt-8">
             <p>© 2024 IUSH - Sistema de Gestión de Parqueaderos</p>
           </div>

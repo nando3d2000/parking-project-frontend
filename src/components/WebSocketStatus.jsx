@@ -4,9 +4,8 @@ import { useMemo } from 'react';
 const WebSocketStatus = ({ parkingLotId = null }) => {
   const { connectionStatus, lastUpdate, isConnected, realtimeSpots } = useRealTimeParking();
 
-  // Filtrar spots solo del parking lot actual
   const filteredSpots = useMemo(() => {
-    if (!parkingLotId) return realtimeSpots; // Si no hay parkingLotId, mostrar todos
+    if (!parkingLotId) return realtimeSpots;
     return realtimeSpots.filter(spot => spot.parkingLotId === parkingLotId);
   }, [realtimeSpots, parkingLotId]);
 

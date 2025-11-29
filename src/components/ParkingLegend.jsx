@@ -46,23 +46,19 @@ const ParkingLegend = ({ className = "" }) => {
             key={item.status}
             className="flex flex-col items-center text-center p-4 bg-gray-50 rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-md"
           >
-            {/* Icono con gradiente */}
             <div
               className={`bg-gradient-to-br ${item.gradient} text-white p-3 rounded-full mb-3 shadow-md`}
             >
               {item.icon}
             </div>
 
-            {/* Etiqueta */}
             <div className="font-bold text-gray-800 mb-1">{item.label}</div>
 
-            {/* Descripción */}
             <div className="text-xs text-gray-600">{item.description}</div>
           </div>
         ))}
       </div>
 
-      {/* Nota adicional */}
       <div className="mt-5 pt-4 border-t border-gray-200">
         <p className="text-xs text-gray-500 text-center">
           💡 Haz clic en cualquier espacio disponible para realizar una reserva

@@ -12,19 +12,15 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
   });
   const [createLoading, setCreateLoading] = useState(false);
 
-  // Datos en tiempo real del WebSocket
   const { realtimeSpots, isConnected } = useRealTimeParking();
 
-  // Combinar datos estáticos con datos en tiempo real
   const finalSpots = useMemo(() => {
     if (spots.length === 0) return [];
     
     return spots.map(staticSpot => {
-      // Buscar datos en tiempo real para este spot
       const realtimeSpot = realtimeSpots.find(rt => rt.id === staticSpot.id);
       
       if (realtimeSpot) {
-        // Si hay datos en tiempo real, usar esos para el status
         return {
           ...staticSpot,
           status: realtimeSpot.status,
@@ -34,7 +30,6 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
         };
       }
       
-      // Si no hay datos en tiempo real, usar datos estáticos
       return {
         ...staticSpot,
         isRealtime: false
@@ -49,18 +44,13 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
   const loadParkingSpots = async () => {
     try {
       setLoading(true);
-      setError(null); // Limpiar errores previos
+      setError(null);
       
-      console.log('Cargando spots para parking lot:', parkingLot.id); // Debug
       const response = await authService.authenticatedRequest(`/spots?parkingLotId=${parkingLot.id}`);
-      
-      console.log('Response status:', response.status); // Debug
       
       if (response.ok) {
         const data = await response.json();
-        console.log('Datos recibidos:', data); // Debug
         
-        // Verificar diferentes estructuras posibles de respuesta
         let spotsArray = [];
         if (data.data?.parkingSpots) {
           spotsArray = data.data.parkingSpots;
@@ -74,15 +64,12 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
           spotsArray = data;
         }
         
-        console.log('Spots procesados:', spotsArray); // Debug
         setSpots(spotsArray);
       } else {
         const errorData = await response.json();
-        console.error('Error del servidor:', errorData); // Debug
         throw new Error(errorData.message || 'Error al cargar espacios');
       }
     } catch (error) {
-      console.error('Error completo cargando espacios:', error); // Debug
       setError(error.message);
     } finally {
       setLoading(false);
@@ -92,12 +79,10 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
   const handleCreateSpot = async (e) => {
     e.preventDefault();
     setCreateLoading(true);
-    setError(null); // Limpiar errores previos
+    setError(null);
 
     try {
-      // Verificar que tenemos token antes de hacer la petición
       const token = localStorage.getItem('token');
-      console.log('Token disponible:', !!token); // Debug
       
       if (!token) {
         throw new Error('No hay token de autenticación. Por favor, inicia sesión nuevamente.');
@@ -108,27 +93,20 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
         parkingLotId: parkingLot.id
       };
 
-      console.log('Enviando datos del spot:', spotData); // Debug
-
       const response = await authService.authenticatedRequest('/spots', {
         method: 'POST',
         body: JSON.stringify(spotData)
       });
 
-      console.log('Respuesta del servidor:', response.status); // Debug
-
       if (response.ok) {
         const result = await response.json();
-        console.log('Spot creado exitosamente:', result); // Debug
         setFormData({ spotType: 'car' });
         setShowCreateForm(false);
-        loadParkingSpots(); // Recargar lista
-        onUpdate && onUpdate(); // Notificar al padre
+        loadParkingSpots();
+        onUpdate && onUpdate();
       } else {
         const errorData = await response.json();
-        console.error('Error del servidor:', errorData); // Debug
         
-        // Si es error de token, redirigir al login
         if (response.status === 401 || response.status === 403) {
           throw new Error('Sesión expirada. Por favor, inicia sesión nuevamente.');
         }
@@ -136,10 +114,8 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
         throw new Error(errorData.message || 'Error al crear espacio');
       }
     } catch (error) {
-      console.error('Error completo:', error); // Debug mejorado
       setError(error.message);
       
-      // Si es error de autenticación, redirigir
       if (error.message.includes('sesión') || error.message.includes('token')) {
         setTimeout(() => {
           window.location.href = '/login';
@@ -166,18 +142,15 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
       }
     } catch (error) {
       setError(error.message);
-      console.error('Error eliminando espacio:', error);
     }
   };
 
   const getStatusColor = (status) => {
     const colors = {
-      // Estados en español (de la BD)
       LIBRE: 'bg-green-100 text-green-700',
       OCUPADO: 'bg-red-100 text-red-700',
       RESERVADO: 'bg-yellow-100 text-yellow-700',
       MANTENIMIENTO: 'bg-orange-100 text-orange-700',
-      // Estados en inglés (del WebSocket)
       available: 'bg-green-100 text-green-700',
       occupied: 'bg-red-100 text-red-700',
       reserved: 'bg-yellow-100 text-yellow-700',
@@ -188,12 +161,10 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
 
   const getStatusText = (status) => {
     const texts = {
-      // Estados en español (de la BD)
       LIBRE: '🟢 Libre',
       OCUPADO: '🔴 Ocupado',
       RESERVADO: '🟡 Reservado',
       MANTENIMIENTO: '🟠 Mantenimiento',
-      // Estados en inglés (del WebSocket)
       available: '🟢 Libre',
       occupied: '🔴 Ocupado',
       reserved: '🟡 Reservado',
@@ -213,7 +184,6 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
             <div>
@@ -235,9 +205,7 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-6">
-          {/* Actions */}
           <div className="flex justify-between items-center mb-6">
             <div>
               <h3 className="text-lg font-semibold text-gray-900">
@@ -263,7 +231,6 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
             </button>
           </div>
 
-          {/* Error */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg mb-4 flex items-center justify-between">
               <div className="flex items-center">
@@ -289,14 +256,12 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
             </div>
           )}
 
-          {/* Loading */}
           {loading ? (
             <div className="flex justify-center py-8">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
           ) : (
             <>
-              {/* Create Form */}
               {showCreateForm && (
                 <div className="bg-gray-50 rounded-lg p-6 mb-6">
                   <h4 className="text-lg font-semibold mb-4">Crear Nuevo Espacio</h4>
@@ -339,7 +304,6 @@ const ParkingSpotManager = ({ parkingLot, onClose, onUpdate }) => {
                 </div>
               )}
 
-              {/* Spots Grid */}
               {finalSpots.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-gray-400 text-6xl mb-4">🚗</div>

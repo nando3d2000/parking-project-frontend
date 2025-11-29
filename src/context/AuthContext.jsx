@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       try {
         if (authService.isAuthenticated()) {
-          // Verificar si el token sigue siendo válido
           const isValid = await authService.refreshTokenIfNeeded();
           if (isValid) {
             setUser(authService.getCurrentUser());
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }) => {
           }
         }
       } catch (error) {
-        console.error('Error inicializando autenticación:', error);
+        setIsAuthenticated(false);
       } finally {
         setLoading(false);
       }
@@ -47,7 +46,6 @@ export const AuthProvider = ({ children }) => {
       }
       return response;
     } catch (error) {
-      console.error('Error en login:', error);
       return {
         success: false,
         message: 'Error de conexión'
@@ -67,7 +65,6 @@ export const AuthProvider = ({ children }) => {
       }
       return response;
     } catch (error) {
-      console.error('Error en registro:', error);
       return {
         success: false,
         message: 'Error de conexión'
